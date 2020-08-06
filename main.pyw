@@ -26,8 +26,8 @@ def supportWindow(): # Ventana de SOPORTE y CONTACTO
     title2.grid(row=0,column=0,columnspan=8)
     lbInfo = LabelFrame(support, text="INFO")
     lbInfo.grid(row=1, column=2, columnspan=4, padx=(5,5), pady=(5,5))
-    lHorario = Label(lbInfo, text="Si encontraste algun problema usando PyHorario, reportalo a mi correo\nDanielAF07 - daniiel0609@gmail.com")
-    lHorario.grid(row=0, column=0)
+    Label(lbInfo, text="Si encontraste algun problema usando ZoomCaller, reportalo a mi correo\nDanielAF07 - daniiel0609@gmail.com").grid(row=0, column=0)
+    Button(lbInfo, text="GitHub", padx=8, pady=5, width=11, bg=mainColor, fg='white', relief='flat', command= lambda: webbrowser.open("https://github.com/DanielAF07/ZoomCaller")).grid(row=1, column=0)
 
 def configWindow(): # Ventana para configurar las ID
     window = Toplevel(root)
