@@ -12,4 +12,4 @@ Este script de Python te permite entrar a una reunion de zoom que hayas programa
 
 Este es mi primer proyecto algo grande. Entiendo que tal vez mi forma de hacer esto, no es la mas eficiente. Asi que cualquier sugerencia y retroalimentacion es bienvenida y muy apreciada.
 
-<img src="https://i.imgur.com/8qzsJ89.png"/>
+<img src="https://imgur.com/4He1Pqv.png"/>
