@@ -195,7 +195,7 @@ def horarioWindow(): # Ventana para configurar el horario
 def start_gui(): # Ventana Principal
     global root
     root = Tk()
-    root.title("ZoomCaller v1.0")
+    root.title("ZoomCaller v1.1")
     root.resizable(height = False, width = False)
     root.iconbitmap('icon.ico')
 
