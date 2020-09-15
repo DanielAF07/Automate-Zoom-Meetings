@@ -20,7 +20,10 @@ def getHorario():
     else:
         for i in range(len(lHours)):
             if lDias[today][i] != "" and lHours[i] != "":
-                horario += lHours[i] + ":" + lMinutes[i] + "-" + lDias[today][i]
+                if 0 <= int(lHours[i]) <= 12: 
+                    horario += lHours[i] + ":" + lMinutes[i] + " AM - " + lDias[today][i]
+                else:
+                    horario += str((int(lHours[i]) - 12)) + ":" + lMinutes[i] +" PM - " + lDias[today][i]
                 horario += "\n"
             else:
                 continue
