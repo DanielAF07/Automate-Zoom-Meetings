@@ -1,5 +1,4 @@
-# ZoomCaller
-Automate your Zoom meetings
+# Automate your Zoom meetings
 
 *No PyAutoGui is needed*
 ###### EN
