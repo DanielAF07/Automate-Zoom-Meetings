@@ -3,6 +3,7 @@
 
 from tkinter import Entry, Button, Tk, Label, LabelFrame, StringVar, Toplevel
 from tkinter import ANCHOR, W, E, N, S, LEFT, DISABLED, INSERT
+from tkinter import ttk
 
 from modules.mainFunctions import *
 import modules.auto as auto
@@ -87,19 +88,19 @@ def horarioWindow(): # Ventana para configurar el horario
         lblNumber = Label(horarioWindow, text = i+1, padx=5)
         lblNumber.grid(row=i+2, column=0)
     
-    Label(horarioWindow, text="24  :  00").grid(row=11, column=1, columnspan=3, sticky="n") 
+    Label(horarioWindow, text="12-hour format").grid(row=11, column=1, columnspan=3, sticky="n") 
     lblHora = Label(horarioWindow, text="Hora")
     lblHora.grid(row=1, column=1, columnspan=3)
     lblLunes = Label(horarioWindow, text="Lunes")
-    lblLunes.grid(row=1, column=4)
+    lblLunes.grid(row=1, column=5)
     lblMartes = Label(horarioWindow, text="Martes")
-    lblMartes.grid(row=1, column=5)
+    lblMartes.grid(row=1, column=6)
     lblMiercoles = Label(horarioWindow, text="Miercoles")
-    lblMiercoles.grid(row=1, column=6)
+    lblMiercoles.grid(row=1, column=7)
     lblJueves = Label(horarioWindow, text="Jueves")
-    lblJueves.grid(row=1, column=7)
+    lblJueves.grid(row=1, column=8)
     lblViernes = Label(horarioWindow, text="Viernes")
-    lblViernes.grid(row=1, column=8)
+    lblViernes.grid(row=1, column=9)
     
     entry_hours = [""]*9
     entry_minutes = [""]*9
@@ -108,6 +109,7 @@ def horarioWindow(): # Ventana para configurar el horario
     entry_miercoles = [""]*9
     entry_jueves = [""]*9
     entry_viernes = [""]*9
+    entry_12h = [""]*9
     
     def hourValidation(S):
         if S.isdigit() == True:
@@ -119,20 +121,26 @@ def horarioWindow(): # Ventana para configurar el horario
     for i in range(9):
         entry_hours[i] = Entry(horarioWindow, width=4, validate='key', vcmd=vcmd)
         entry_hours[i].grid(row=i+2, column=1)
-        entry_minutes[i] = Entry(horarioWindow, width=4, validate='key', vcmd=vcmd)
-        entry_minutes[i].grid(row=i+2, column=3)
         lblSepar = Label(horarioWindow, text=":")
         lblSepar.grid(row=i+2, column=2)
+        entry_minutes[i] = Entry(horarioWindow, width=4, validate='key', vcmd=vcmd)
+        entry_minutes[i].grid(row=i+2, column=3)
+        
+        entry_12h[i] = ttk.Combobox(horarioWindow, state="readonly", width=4)
+        entry_12h[i]["values"] = ["AM", "PM"]
+        entry_12h[i].set("AM")
+        entry_12h[i].grid(row=i+2, column=4, padx=(5,2))
+        
         entry_lunes[i] = Entry(horarioWindow)
-        entry_lunes[i].grid(row=i+2, column=4, padx=(10,2), pady=(2,2))
+        entry_lunes[i].grid(row=i+2, column=5, padx=(10,2), pady=(2,2))
         entry_martes[i] = Entry(horarioWindow)
-        entry_martes[i].grid(row=i+2, column=5, padx=(2,2))
+        entry_martes[i].grid(row=i+2, column=6, padx=(2,2))
         entry_miercoles[i] = Entry(horarioWindow)
-        entry_miercoles[i].grid(row=i+2, column=6, padx=(2,2))
+        entry_miercoles[i].grid(row=i+2, column=7, padx=(2,2))
         entry_jueves[i] = Entry(horarioWindow)
-        entry_jueves[i].grid(row=i+2, column=7, padx=(2,2))
+        entry_jueves[i].grid(row=i+2, column=8, padx=(2,2))
         entry_viernes[i] = Entry(horarioWindow)
-        entry_viernes[i].grid(row=i+2, column=8, padx=(2,2))
+        entry_viernes[i].grid(row=i+2, column=9, padx=(2,2))
     
     dataHorario = dm.loadSchedule()
     lHours = dataHorario[0]
@@ -142,8 +150,17 @@ def horarioWindow(): # Ventana para configurar el horario
     lMiercoles = dataHorario[4]
     lJueves = dataHorario[5]
     lViernes = dataHorario[6]
+
     for i in range (9):
-        entry_hours[i].insert(INSERT, lHours[i])
+        if lHours[i] == "":
+            entry_12h[i].set("")
+        else:
+            if int(lHours[i]) > 12:
+                entry_hours[i].insert(INSERT, str(int(lHours[i])-12))
+                entry_12h[i].set("PM")
+            elif 0 <= int(lHours[i]) <= 12:
+                entry_hours[i].insert(INSERT, lHours[i])
+                entry_12h[i].set("AM")
         entry_minutes[i].insert(INSERT, lMinutes[i])
         entry_lunes[i].insert(INSERT, lLunes[i])
         entry_martes[i].insert(INSERT, lMartes[i])
@@ -154,6 +171,7 @@ def horarioWindow(): # Ventana para configurar el horario
     def deleteHour(ind):
         entry_hours[ind].delete(0,"end")
         entry_minutes[ind].delete(0, "end")
+        entry_12h[ind].set('')
         entry_lunes[ind].delete(0, "end")
         entry_martes[ind].delete(0, "end")
         entry_miercoles[ind].delete(0, "end")
@@ -164,7 +182,7 @@ def horarioWindow(): # Ventana para configurar el horario
     for i in range(9):
         index = i
         btnCancel[i] = Button(horarioWindow, text="X", font='Roboto 9 bold', bg="red", fg="white", relief="solid", command=lambda i=i: deleteHour(i))
-        btnCancel[i].grid(row=i+2, column=9)
+        btnCancel[i].grid(row=i+2, column=10)
 
     def saveSchedule():
         sHours = [0]*9
@@ -175,8 +193,17 @@ def horarioWindow(): # Ventana para configurar el horario
         sJueves = [0]*9
         sViernes = [0]*9
         for i in range (9):
-            sHours[i] = entry_hours[i].get()[0:2]
-            sMinutes[i] = entry_minutes[i].get()[0:2]
+            if entry_12h[i].get() == 'AM':
+                sHours[i] = entry_hours[i].get()[0:2]
+            elif entry_12h[i].get() == 'PM':
+                sHours[i] = str(int(entry_hours[i].get()[0:2]) + 12)
+            else:
+                sHours[i] = ""
+            #print(sHours[i])
+            if entry_12h[i].get() != '':
+                sMinutes[i] = entry_minutes[i].get()[0:2]
+            else:
+                sMinutes[i] = ''
             sLunes[i] = entry_lunes[i].get()
             sMartes[i] = entry_martes[i].get()
             sMiercoles[i] = entry_miercoles[i].get()
@@ -190,12 +217,12 @@ def horarioWindow(): # Ventana para configurar el horario
         refresh()
     
     btnConfirm = Button(horarioWindow, text="Confirmar", padx=8, pady=5, width=11, bg=mainColor, fg="white", relief='flat', command=saveSchedule)
-    btnConfirm.grid(row=11, column=8, columnspan=2, pady=(3,6))
+    btnConfirm.grid(row=11, column=9, columnspan=2, pady=(3,6))
 
 def start_gui(): # Ventana Principal
     global root
     root = Tk()
-    root.title("ZoomCaller v1.1")
+    root.title("ZoomCaller v1.2")
     root.resizable(height = False, width = False)
     root.iconbitmap('icon.ico')
 
